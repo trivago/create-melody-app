@@ -1,0 +1,22 @@
+{
+  "name": "create-melody-app",
+  "version": "0.1.0",
+  "description": "Create Melody apps quickly from the command line.",
+  "main": "bin/create-melody-app",
+  "bin": {
+    "create-melody-app": "./bin/create-melody-app"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trivago/create-melody-app.git"
+  },
+  "author": "trivago",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/trivago/create-melody-app/issues"
+  },
+  "homepage": "https://melody.js.org"
+}
