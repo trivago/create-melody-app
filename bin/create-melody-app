@@ -1,0 +1,124 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const { green, grey, red } = require('chalk');
+const download = require('download-git-repo');
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
+const { execSync } = require('child_process');
+const { cwd } = process;
+const pkg = require('../package.json');
+
+const command = process.argv.slice(2);
+
+const hasYarn = (() => {
+  try {
+    execSync('yarnpkg --version', { stdio: 'ignore' });
+    return true;
+  } catch (e) {
+    return false;
+  }
+})();
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+const spacer = (num) => '\n'.repeat(num);
+
+const intro = () => {
+  console.log(green('Create Melody App') + spacer(1));
+}
+
+const help = () => {
+  console.log('    Usage: create-melody-app <project-name>');
+  console.log(spacer(1));
+  console.log('    Options: ');
+  console.log('      -h, --help\tHelp message');
+  console.log('      -v, --version\tCurrent version');
+  exit();
+}
+
+const version = () => {
+  console.log(pkg.version);
+  exit();
+}
+
+const err = (msg) => {
+  console.log('   Create Melody App ' + red('ERR') + ' - ' + msg, spacer(1));
+  exit();
+}
+
+const exit = () => rl.close();
+
+const { sep } = path;
+let mkdirp = (dir) => {
+  const parts = dir.split(sep);
+  let subdir = sep;
+
+  for(let i = 1; i < parts.length; i++) {
+    subdir += parts[i] + sep;
+    if(fs.existsSync(subdir) === false) {
+      fs.mkdirSync(subdir);
+    }
+  }
+}
+
+const init = (name) => {
+  const projectDir = path.join(cwd(), name);
+  if(fs.existsSync(projectDir)) {
+    err(`A file/folder named ${grey(name)} already exists.`);
+    exit();
+    return;
+  } else {
+    mkdirp(projectDir);
+  }
+
+  console.log(`Creating a new ${green('Melody')} app named ${grey(name)}`, spacer(1));
+  console.log('Downloading template. This might take a couple of minutes...');
+
+  download('trivago/melody-template', projectDir, () => {
+
+    rl.on('close', function() {
+      console.log(spacer());
+      console.log(`✨  ${green('Success!')} Created ${grey(name)} in ${grey(projectDir)}`);
+      console.log(spacer());
+      console.log(`Inside that directory, you can run these commands:
+  ${green(hasYarn ? 'yarn' : 'npm install')}
+    Installs the project dependencies.
+  ${green(`${hasYarn ? 'yarn' : 'npm'} start`)}
+    Starts the development server.
+  ${green(`${hasYarn ? 'yarn' : 'npm run'} build`)}
+    Bundles the app into static files in the ${grey('/public')} folder.
+
+To start, run:
+  ${green('cd')} ${name}
+  ${green(hasYarn ? 'yarn' : 'npm install')}
+  ${green(`${hasYarn ? 'yarn' : 'npm'} start`)}
+`);
+    });
+    // templateLoader.done(function() {
+      // Close Interface when Done
+      setTimeout(exit, 2000);
+    // });
+  });
+}
+
+intro();
+switch (command[0]) {
+  case '--help':
+  case '-h':
+  case '-?':
+  case undefined:
+    help();
+    break;
+  case '-v':
+  case '--version':
+    version();
+    break;
+  default:
+    init(command[0]);
+}

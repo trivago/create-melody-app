@@ -1,6 +1,6 @@
 {
   "name": "create-melody-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create Melody apps quickly from the command line.",
   "main": "bin/create-melody-app",
   "bin": {
@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/trivago/create-melody-app/issues"
   },
-  "homepage": "https://melody.js.org"
+  "homepage": "https://melody.js.org",
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "download-git-repo": "^1.0.1"
+  }
 }
