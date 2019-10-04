@@ -1,5 +1,7 @@
 # Create Melody App
 
+Create Melody apps quickly from the command line
+
 ## Installation
 
 ### npm
